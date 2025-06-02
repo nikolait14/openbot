@@ -1,7 +1,8 @@
 from openai import OpenAI
+from tokens import open
 client = OpenAI(
   base_url="https://api.langdock.com/openai/eu/v1",
-  api_key="<YOUR_LANGDOCK_API_KEY>"
+  api_key=open                                      # токен landgock'а из tokens.py
 )
 
 completion = client.chat.completions.create(
