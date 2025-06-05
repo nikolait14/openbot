@@ -1,52 +1,24 @@
-# from sqlalchemy import create_engine
-# from sqlalchemy.orm import declarative_base, sessionmaker
-# from sqlalchemy import Integer, String, Column
-#
-#
-# Base = declarative_base()
-# engine = create_engine("postgresql+psycopg2://postgres:1234@localhost/data")
-# Session = sessionmaker(bind=engine)
-# s = Session()
-#
-#
-# class Openbot(Base):
-#     __tablename__ = "openbot"
-#     id = Column(Integer, primary_key=True)
-#     vip = Column(Integer, nullable=False)
-#     payment = Column(String, nullable=False)
-#
-#
-# data = s.query(Openbot).all()
-# Base.metadata.create_all(engine)
-#
-# Base.metadata.create_all(engine)
 from sqlalchemy import create_engine
-from sqlalchemy.orm import declarative_base, sessionmaker
-from sqlalchemy import Integer, String, Column
+from sqlalchemy.orm import declarative_base
+from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import sessionmaker
 
 
+engine = create_engine("postgresql+psycopg2://postgres:1234@localhost/openbot")
 Base = declarative_base()
-engine = create_engine("postgresql+psycopg2://postgres:1234@localhost/data")
 Session = sessionmaker(bind=engine)
 s = Session()
 
 
-class Openbot(Base):
-    __tablename__ = "openbot"
-    id = Column(Integer, primary_key=True)
-    status_pay = Column(String, nullable=False)
-    token_balance = Column(Integer, nullable=False)
+class Users(Base):
+    __tablename__ = 'users'
+    id = Column(Integer, primary_key=True, nullable=False)      #id
+    status = Column(String, nullable=False)                     #статус юзера default / vip далее от этого зависит
+                                                                #кол - во токенов для запросов
+    date = Column(Integer, nullable=False)                      #осталось дней до конца подписки(если есть)
 
-
-st1 = Openbot(id=0, status_pay="F", token_balance=10)
-st2 = Openbot(id=1, status_pay="T", token_balance=100)
-st3 = Openbot(id=2, status_pay="F", token_balance=100)
-
-s.merge(st1)
-s.merge(st2)
-s.merge(st3)
+first = Users(id=1, status='vip', date=10)
+s.add(first)
 s.commit()
 
-data = s.query(Openbot).all()
 Base.metadata.create_all(engine)
-print(data)
